@@ -123,3 +123,4 @@ FROM Entry AS e
 
 	) AS p
 	ON e.fk_project_id = p.project_id
+	WHERE e.updated_at > :sql_last_value
