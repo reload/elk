@@ -1,0 +1,125 @@
+SELECT
+
+	u.id AS user_id,
+	u.first_name AS user_first_name,
+	u.last_name AS user_last_name,
+	u.email AS user_email,
+	u.is_active AS user_is_active,
+	u.is_admin AS user_is_admin,
+	u.is_contractor AS user_is_contractor,
+	u.working_hours AS user_working_hours,
+	u.billability_goal AS user_billability_goal,
+	u.created_at AS user_created_at,
+	u.updated_at AS user_updated_at,
+
+	e.id AS entry_id,
+	e.fk_user_id AS entry_fk_user_id,
+	e.fk_project_id AS entry_fk_project_id,
+	e.fk_task_id AS entry_fk_task_id,
+	e.notes AS entry_notes,
+	e.hours AS entry_hours,
+	e.is_closed AS entry_is_closed,
+	e.is_billed AS entry_is_billed,
+	e.spent_at AS entry_spent_at,
+	e.timer_started_at AS entry_timer_started_at,
+	e.created_at AS entry_created_at,
+	e.updated_at AS entry_updated_at,
+	e.status AS entry_status,
+
+	t.id AS task_id,
+	t.name AS task_name,
+	t.is_default AS task_is_default,
+	t.default_hourly_rate AS task_default_hourly_rate,
+	t.billable_by_default AS task_billable_by_default,
+	t.deactivated AS task_deactivated,
+	t.created_at AS task_created_at,
+	t.updated_at AS task_updated_at,
+
+	project_id,
+	project_fk_client_id,
+	project_name,
+	project_code,
+	project_active,
+	project_notes,
+	project_billable,
+	project_bill_by,
+	project_cost_budget,
+	project_cost_budget_include_expenses,
+	project_hourly_rate,
+	project_budget,
+	project_budget_by,
+	project_notify_when_over_budget,
+	project_over_budget_notification_percentage,
+	project_over_budget_notified_at,
+	project_show_budget_to_all,
+	project_estimate,
+	project_estimate_by,
+	project_hint_earliest_record_at,
+	project_hint_latest_record_at,
+	project_created_at,
+	project_updated_at,
+
+	client_id,
+	client_name,
+	client_active,
+	client_currency,
+	client_currency_symbol,
+	client_details,
+	client_last_invoice_kind,
+	client_default_invoice_timeframe,
+	client_created_at,
+	client_updated_at
+
+FROM Entry AS e
+
+	JOIN Task AS t
+	ON  e.`fk_task_id` = t.`id`
+
+	JOIN User AS u
+	ON e.`fk_user_id` = u.`id`
+
+	JOIN (
+		SELECT
+
+		p.id AS project_id,
+		p.fk_client_id AS project_fk_client_id,
+		p.name AS project_name,
+		p.code AS project_code,
+		p.active AS project_active,
+		p.notes AS project_notes,
+		p.billable AS project_billable,
+		p.bill_by AS project_bill_by,
+		p.cost_budget AS project_cost_budget,
+		p.cost_budget_include_expenses AS project_cost_budget_include_expenses,
+		p.hourly_rate AS project_hourly_rate,
+		p.budget AS project_budget,
+		p.budget_by AS project_budget_by,
+		p.notify_when_over_budget AS project_notify_when_over_budget,
+		p.over_budget_notification_percentage AS project_over_budget_notification_percentage,
+		p.over_budget_notified_at AS project_over_budget_notified_at,
+		p.show_budget_to_all AS project_show_budget_to_all,
+		p.estimate AS project_estimate,
+		p.estimate_by AS project_estimate_by,
+		p.hint_earliest_record_at AS project_hint_earliest_record_at,
+		p.hint_latest_record_at	AS project_hint_latest_record_at,
+		p.created_at AS project_created_at,
+		p.updated_at AS project_updated_at,
+
+		c.id AS client_id,
+		c.name AS client_name,
+		c.active AS client_active,
+		c.currency AS client_currency,
+		c.currency_symbol AS client_currency_symbol,
+		c.details AS client_details,
+		c.last_invoice_kind AS client_last_invoice_kind,
+		c.default_invoice_timeframe AS client_default_invoice_timeframe,
+		c.created_at AS client_created_at,
+		c.updated_at AS client_updated_at
+
+		FROM Project AS p
+
+		JOIN Client AS c
+		ON p.fk_client_id = c.id
+
+	) AS p
+	ON e.fk_project_id = p.project_id
